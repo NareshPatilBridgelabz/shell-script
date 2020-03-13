@@ -1,3 +1,7 @@
+# !/bin/bash
+# User Input and Replace String Template “Hello <<UserName>>, How are you?”
+# Author: Naresh
+# Date: 13/03/2020
 message="Hello <<UserName>>, How are you?"
 echo "Enter the name "
 read name
