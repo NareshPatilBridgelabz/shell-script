@@ -2,6 +2,7 @@
 # Print the prime factors of number N.
 # Author: Naresh
 # Date: 13/03/2020
+
 read -p "Enter the number to find its prime factors " number
 for (( index=2; index<=$number; index++ ))
 do
