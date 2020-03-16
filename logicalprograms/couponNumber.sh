@@ -7,9 +7,11 @@ read -p "Enter number : " n
 echo $n
 index=0;
 ARRAY=(0 0 0 0 0)
+countDistict=0
 while(( $n > 0 ))
 do
-	random=$(( RANDOM%10 ))
+	random=$(( RANDOM%100 ))
+	(( countDistict++ ))
 	echo $random
 	flag=false
 	for(( i=0;i<$index;i++ ))
@@ -23,7 +25,7 @@ do
 		fi	
 	done
 	echo $flag
-	if [ !$flag ]
+	if ! $flag;
 	then
 		echo "flag condition"
 		ARRAY[$index]=$random
@@ -31,4 +33,5 @@ do
 		(( n-- ))
 	fi
 done
+echo "Total random number : $countDistict"
 echo ${ARRAY[@]}
