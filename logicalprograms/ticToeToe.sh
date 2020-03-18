@@ -34,50 +34,113 @@ printBoard(){
 		echo
 	done
 }
-userPlay(){
-	while [[ $validPos -eq 0 ]]
-	do
-		read -p "Enter The mark : " userMark
-		fillBoard $userMark "x"
-	done
+userPlay() {
+	echo "user turn"
 	validPos=0
-	compPlay
-}
-compPlay(){
-	while [[ $validPos -eq 0 ]]
+	while [ $validPos -eq 0 ]
 	do
-		read -p "Computer Enter The mark : " compMark
-		fillBoard $compMark "o"
+		echo "Enter a valid pos between 0-9, where u want to mark"
+		read position
+		markPosition "x" $position
 	done
-	validPos=0
-	userPlay
-}
-fillBoard(){
-	case $1 in
-		1 ) x=0 y=0 ;;
-		2 ) x=0 y=2 ;;
-		3 ) x=0 y=4 ;;
-		4 ) x=2 y=0 ;;
-		5 ) x=2 y=2 ;;
-		6 ) x=2 y=4 ;;
-		7 ) x=4 y=0 ;;
-		8 ) x=4 y=2 ;;
-		9 ) x=4 y=4 ;;
-		* ) validPos=1 
-		    echo "invalid position.";;
-	esac
-	if [ ${arr[$x$y]} == "." ]
-	then
-		arr[$x$y]=$2
-		printBoard
-		validPos=1
-	else 	
-		validPos=0;
-		echo "invalid position."
+	((playCount++))
+        if [ $playCount -gt 4 ]
+        then
+                checkforWin "x"
+	else
+		comPlay
 	fi
 }
-validPos=0
-intializeBoard
-printBoard
+comPlay() {
+        echo "Computer turn"
+        validPos=0
+        while [ $validPos -eq 0 ]
+        do
+                position=$((RANDOM%8+1))
+                markPosition "o" $position
+        done
+	((playCount++))
+	if [ $playCount -gt 4 ]
+	then
+		checkforWin "o"
+	else
+	userPlay
+	fi
+}
+markPosition() {
+	case $2 in
+		1 ) xPos=0    yPos=0  ;;
+                2 ) xPos=0    yPos=2  ;;
+                3 ) xPos=0    yPos=4  ;;
+                4 ) xPos=2    yPos=0  ;;
+	        5 ) xPos=2    yPos=2  ;;
+                6 ) xPos=2    yPos=4  ;;
+                7 ) xPos=4    yPos=0  ;;
+                8 ) xPos=4    yPos=2  ;;
+                9 ) xPos=4    yPos=4  ;;
+		* )validPos=0 
+		   echo "Invalid Position" ;;
+	esac
+	if [ ${ar[$xPos$yPos]} == "." ]
+	then
+		ar[$xPos$yPos]=$1
+		dispBoard
+		validPos=1
+	else [ $1 == "x" ]
+		echo "invalid position"
+	fi
+}
+checkforWin() {
+if [ $playCount -le 9 ]
+then
+	if [[ ${ar[00]} == $1 && ${ar[02]} == $1 && ${ar[04]} == $1 ]]
+	then
+		win=1
+	elif [[ ${ar[20]} == $1 && ${ar[22]} == $1 && ${ar[24]} == $1 ]]
+        then
+                win=1
+ 	elif [[ ${ar[40]} == $1 && ${ar[42]} == $1 && ${ar[44]} == $1 ]]
+        then
+                win=1
+	elif [[ ${ar[00]} == $1 && ${ar[20]} == $1 && ${ar[40]} == $1 ]]
+        then
+                win=1
+ 	elif [[ ${ar[02]} == $1 && ${ar[22]} == $1 && ${ar[42]} == $1 ]]
+        then
+                win=1
+ 	elif [[ ${ar[04]} == $1 && ${ar[24]} == $1 && ${ar[44]} == $1 ]]
+        then
+                win=1
+	elif [[ ${ar[00]} == $1 && ${ar[22]} == $1 && ${ar[44]} == $1 ]]
+        then
+                win=1
+	elif [[ ${ar[40]} == $1 && ${ar[22]} == $1 && ${ar[04]} == $1 ]]
+        then
+                win=1
+	else
+		win=0
+	fi
+fi
+	if [[ $win -eq 1 && $1 == "x" ]]
+	then 
+		echo "User Win"
+	elif [[ $win -eq 1 && $1 == "o" ]]
+	then
+		echo "Computer Win"
+	elif [ $playCount -eq 9 ]
+	then
+		echo "Match Draw"
+	elif [ $1 == "x" ]
+	then
+		comPlay
+	else
+		userPlay
+	fi
+}
+echo "----------------TicTakToe game started-------------------"
 
+playCount=0
+validPos=0
+initialiseBoard
+dispBoard
 userPlay
